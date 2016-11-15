@@ -4,10 +4,24 @@
     <Filter Include="src">
       <UniqueIdentifier>{4e55ea56-1d81-44c1-9068-13f7555ee5da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\valhalla">
+      <UniqueIdentifier>{edc14608-6dd1-4f3f-8fc6-71de62b6fc8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\valhalla\Display.cpp">
+      <Filter>src\valhalla</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\valhalla\Display.h">
+      <Filter>src\valhalla</Filter>
+    </ClInclude>
+    <ClInclude Include="src\valhalla\data_types.h">
+      <Filter>src\valhalla</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
