@@ -1,14 +1,18 @@
+#include <iostream>
 #include <random>
 #include <SFML/Graphics.hpp>
 
-#include "valhalla\Display.h"
+#include "valhalla/Display.h"
 
-#define DISPLAY_WIDTH 128
-#define DISPLAY_HEIGHT 80
-#define SCALE 6
+// TODO: Make this configurable
+#define DISPLAY_WIDTH  320
+#define DISPLAY_HEIGHT 240
+#define DISPLAY_PIXEL_COUNT (DISPLAY_WIDTH * DISPLAY_HEIGHT)
+#define SCALE 3
 
-void renderDisplayToTexture(Display* display, sf::Texture* texture)
+void renderDisplayToTexture(Display* display, sf::RenderTexture* render, sf::Sprite* fontSprite)
 {
+    // TODO: Loading palette from resource file
     const static sf::Color palette[] = {
         sf::Color(0, 0, 0),
         sf::Color(157, 157, 157),
@@ -29,17 +33,47 @@ void renderDisplayToTexture(Display* display, sf::Texture* texture)
         sf::Color(255, 0, 255)
     };
 
-    sf::Uint8 pixels[DISPLAY_WIDTH * DISPLAY_HEIGHT * 4];
-
-    for (int i = 0; i < (DISPLAY_WIDTH * DISPLAY_HEIGHT); i++)
+    if (display->mode == GRAPHICS)
     {
-        pixels[i * 4]     = palette[display->buffer[i]].r;
-        pixels[i * 4 + 1] = palette[display->buffer[i]].g;
-        pixels[i * 4 + 2] = palette[display->buffer[i]].b;
-        pixels[i * 4 + 3] = palette[display->buffer[i]].a;
-    }
+        sf::Uint8 pixels[DISPLAY_PIXEL_COUNT * 4];
 
-    texture->update(pixels);
+        for (int i = 0; i < DISPLAY_PIXEL_COUNT; i++)
+        {
+            pixels[i * 4] = palette[display->buffer[i]].r;
+            pixels[i * 4 + 1] = palette[display->buffer[i]].g;
+            pixels[i * 4 + 2] = palette[display->buffer[i]].b;
+            pixels[i * 4 + 3] = palette[display->buffer[i]].a;
+        }
+
+        sf::Texture tempTexture;
+        tempTexture.create(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        tempTexture.update(pixels);
+        sf::Sprite tempSprite(tempTexture);
+
+        render->draw(tempSprite);
+        render->display();
+    }
+    else if (display->mode == TEXT)
+    {
+        render->clear();
+
+        for (int i = 0; i < DISPLAY_PIXEL_COUNT; i++)
+        {
+            char c = display->buffer[i];
+            int cx = (int)(c % 16);
+            int cy = (int)(c / 16);
+
+            int x = (int)(i % DISPLAY_WIDTH * 8);
+            int y = (int)(i / DISPLAY_WIDTH * 8);
+
+            fontSprite->setTextureRect(sf::IntRect(cx * 8, cy * 8, 8, 8));
+            fontSprite->setPosition(x, y);
+
+            render->draw(*fontSprite);
+        }
+
+        render->display();
+    }
 }
 
 int main()
@@ -48,13 +82,12 @@ int main()
     Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
     // Display to SFML layer
-    sf::Texture displayTexture;
+    sf::RenderTexture displayTexture;
     displayTexture.create(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-    renderDisplayToTexture(&display, &displayTexture);
 
     sf::Sprite displaySprite;
-    displaySprite.setTexture(displayTexture);
-    displaySprite.setScale(sf::Vector2f(SCALE, SCALE));
+    displaySprite.setTexture(displayTexture.getTexture());
+    displaySprite.setScale(SCALE, SCALE);
 
     // RANDOM
     std::default_random_engine generator;
@@ -66,6 +99,17 @@ int main()
         "Valhalla VM"
     );
 
+    // Loading font texture
+    sf::Texture fontTexture;
+    if (!fontTexture.loadFromFile("res/font.png"))
+    {
+        std::cerr << "Couldn't load font file" << std::endl;
+        return 1;
+    }
+
+    sf::Sprite fontSprite(fontTexture);
+
+    // Main loop
     while (window.isOpen())
     {
         sf::Event event;
@@ -75,14 +119,18 @@ int main()
                 window.close();
         }
 
-        window.clear();
-
-        for (int i = 0; i < DISPLAY_WIDTH * DISPLAY_HEIGHT; i++)
+        for (int i = 0; i < DISPLAY_PIXEL_COUNT; i++)
         {
             display.buffer[i] = (u8)(distribution(generator));
         }
 
-        renderDisplayToTexture(&display, &displayTexture);
+        //display.buffer[0] = 'h';
+        //display.buffer[1] = 'e';
+        //display.buffer[2] = 'l';
+        //display.buffer[3] = 'l';
+        //display.buffer[4] = 'o';
+
+        renderDisplayToTexture(&display, &displayTexture, &fontSprite);
         window.draw(displaySprite);
 
         window.display();
