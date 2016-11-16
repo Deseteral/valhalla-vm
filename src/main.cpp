@@ -8,6 +8,11 @@
 #define DISPLAY_WIDTH  320
 #define DISPLAY_HEIGHT 240
 #define DISPLAY_PIXEL_COUNT (DISPLAY_WIDTH * DISPLAY_HEIGHT)
+
+#define DISPLAY_CHARS_HORIZONTAL (int)(DISPLAY_WIDTH / 8)
+#define DISPLAY_CHARS_VERTICAL   (int)(DISPLAY_HEIGHT / 8)
+#define DISPLAY_CHARS_COUNT      (DISPLAY_CHARS_VERTICAL * DISPLAY_CHARS_HORIZONTAL)
+
 #define SCALE 3
 
 void renderDisplayToTexture(Display* display, sf::RenderTexture* render, sf::Sprite* fontSprite)
@@ -57,17 +62,17 @@ void renderDisplayToTexture(Display* display, sf::RenderTexture* render, sf::Spr
     {
         render->clear();
 
-        for (int i = 0; i < DISPLAY_PIXEL_COUNT; i++)
+        for (int i = 0; i < DISPLAY_CHARS_COUNT; i++)
         {
             char c = display->buffer[i];
             int cx = (int)(c % 16);
             int cy = (int)(c / 16);
 
-            int x = (int)(i % DISPLAY_WIDTH * 8);
-            int y = (int)(i / DISPLAY_WIDTH * 8);
+            int x = (int)(i % DISPLAY_CHARS_HORIZONTAL);
+            int y = (int)(i / DISPLAY_CHARS_HORIZONTAL);
 
             fontSprite->setTextureRect(sf::IntRect(cx * 8, cy * 8, 8, 8));
-            fontSprite->setPosition(x, y);
+            fontSprite->setPosition(x * 8, y * 8);
 
             render->draw(*fontSprite);
         }
@@ -91,7 +96,8 @@ int main()
 
     // RANDOM
     std::default_random_engine generator;
-    std::uniform_int_distribution<int> distribution(0, 15);
+    std::uniform_int_distribution<int> randomColor(0, 15);
+    std::uniform_int_distribution<int> randomChar(33, 126);
 
     // Setting up render window
     sf::RenderWindow window(
@@ -121,7 +127,7 @@ int main()
 
         for (int i = 0; i < DISPLAY_PIXEL_COUNT; i++)
         {
-            display.buffer[i] = (u8)(distribution(generator));
+            display.buffer[i] = (u8)(randomChar(generator));
         }
 
         //display.buffer[0] = 'h';
