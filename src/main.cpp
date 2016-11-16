@@ -1,5 +1,4 @@
 #include <iostream>
-#include <random>
 #include <SFML/Graphics.hpp>
 
 #include "valhalla/Display.h"
@@ -65,14 +64,14 @@ void renderDisplayToTexture(Display* display, sf::RenderTexture* render, sf::Spr
         for (int i = 0; i < DISPLAY_CHARS_COUNT; i++)
         {
             char c = display->buffer[i];
-            int cx = (int)(c % 16);
-            int cy = (int)(c / 16);
+            int cx = ((int)(c % 16) * 8);
+            int cy = ((int)(c / 16) * 8);
 
-            int x = (int)(i % DISPLAY_CHARS_HORIZONTAL);
-            int y = (int)(i / DISPLAY_CHARS_HORIZONTAL);
+            int x = ((int)(i % DISPLAY_CHARS_HORIZONTAL) * 8);
+            int y = ((int)(i / DISPLAY_CHARS_HORIZONTAL) * 8);
 
-            fontSprite->setTextureRect(sf::IntRect(cx * 8, cy * 8, 8, 8));
-            fontSprite->setPosition(x * 8, y * 8);
+            fontSprite->setTextureRect(sf::IntRect(cx, cy, 8, 8));
+            fontSprite->setPosition(x, y);
 
             render->draw(*fontSprite);
         }
@@ -86,24 +85,19 @@ int main()
     // TODO: Move this to a VM class that describes the state of app
     Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
-    // Display to SFML layer
+    // Setting up render window
+    sf::RenderWindow window(
+        sf::VideoMode(DISPLAY_WIDTH * SCALE, DISPLAY_HEIGHT * SCALE),
+        "Valhalla VM"
+    );
+
+    // Rendering Display to SFML layer
     sf::RenderTexture displayTexture;
     displayTexture.create(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
     sf::Sprite displaySprite;
     displaySprite.setTexture(displayTexture.getTexture());
     displaySprite.setScale(SCALE, SCALE);
-
-    // RANDOM
-    std::default_random_engine generator;
-    std::uniform_int_distribution<int> randomColor(0, 15);
-    std::uniform_int_distribution<int> randomChar(33, 126);
-
-    // Setting up render window
-    sf::RenderWindow window(
-        sf::VideoMode(DISPLAY_WIDTH * SCALE, DISPLAY_HEIGHT * SCALE),
-        "Valhalla VM"
-    );
 
     // Loading font texture
     sf::Texture fontTexture;
@@ -124,17 +118,6 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
-        for (int i = 0; i < DISPLAY_PIXEL_COUNT; i++)
-        {
-            display.buffer[i] = (u8)(randomChar(generator));
-        }
-
-        //display.buffer[0] = 'h';
-        //display.buffer[1] = 'e';
-        //display.buffer[2] = 'l';
-        //display.buffer[3] = 'l';
-        //display.buffer[4] = 'o';
 
         renderDisplayToTexture(&display, &displayTexture, &fontSprite);
         window.draw(displaySprite);

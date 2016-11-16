@@ -1,6 +1,6 @@
 #pragma once
 
-#include "data_types.h"
+#include "../data_types.h"
 
 enum DisplayMode {
     TEXT, GRAPHICS

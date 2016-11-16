@@ -20,8 +20,8 @@
     <ClInclude Include="src\valhalla\Display.h">
       <Filter>src\valhalla</Filter>
     </ClInclude>
-    <ClInclude Include="src\valhalla\data_types.h">
-      <Filter>src\valhalla</Filter>
+    <ClInclude Include="src\data_types.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
