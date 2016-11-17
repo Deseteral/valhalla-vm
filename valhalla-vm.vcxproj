@@ -121,10 +121,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\valhalla\Assembler.cpp" />
     <ClCompile Include="src\valhalla\Display.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\data_types.h" />
+    <ClInclude Include="src\valhalla\Assembler.h" />
     <ClInclude Include="src\valhalla\Display.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

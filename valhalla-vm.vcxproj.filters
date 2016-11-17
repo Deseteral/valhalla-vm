@@ -15,6 +15,9 @@
     <ClCompile Include="src\valhalla\Display.cpp">
       <Filter>src\valhalla</Filter>
     </ClCompile>
+    <ClCompile Include="src\valhalla\Assembler.cpp">
+      <Filter>src\valhalla</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\valhalla\Display.h">
@@ -22,6 +25,9 @@
     </ClInclude>
     <ClInclude Include="src\data_types.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\valhalla\Assembler.h">
+      <Filter>src\valhalla</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "valhalla/Display.h"
+#include "valhalla/Assembler.h"
 
 // TODO: Make this configurable
 #define DISPLAY_WIDTH  320
@@ -82,6 +83,9 @@ void renderDisplayToTexture(Display* display, sf::RenderTexture* render, sf::Spr
 
 int main()
 {
+    // Loading test program
+    Assembler assembler("fs/test.vasm");
+
     // TODO: Move this to a VM class that describes the state of app
     Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
