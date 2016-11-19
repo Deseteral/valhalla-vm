@@ -85,6 +85,7 @@ int main()
 {
     // Loading test program
     Assembler assembler("fs/test.vasm");
+    assembler.compile();
 
     // TODO: Move this to a VM class that describes the state of app
     Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT);

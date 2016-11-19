@@ -1,5 +1,5 @@
 SET X 200
-ADD X 1000
+ADD X 1000 ; this is a comment
 
 ; this is a comment
 NOP

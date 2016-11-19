@@ -13,4 +13,6 @@ public:
 
 private:
     std::vector<string> fileLines;
+
+    std::vector<string> tokensFromLine(string line);
 };
