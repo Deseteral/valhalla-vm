@@ -13,6 +13,7 @@ public:
 
 private:
     std::vector<string> fileLines;
+    std::vector<u8> bytecode;
 
     std::vector<string> tokensFromLine(string line);
 };
