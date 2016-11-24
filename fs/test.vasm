@@ -5,7 +5,7 @@ ADD X 1000 ; this is a comment
 NOP
 HCF
 
-
+THIS_TOKEN_DOESNT_EXIST 0x100
 
 
 

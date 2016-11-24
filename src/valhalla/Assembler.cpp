@@ -55,6 +55,10 @@ void Assembler::compile()
                 std::cout << "Byte: " << (int)definition->byte << std::endl;
                 bytecode.push_back(definition->byte);
             }
+            else
+            {
+                std::cout << "Token <" << tokens[0] << "> doesn't exist" << std::endl;
+            }
         }
 
         std::cout << std::endl << std::endl;
