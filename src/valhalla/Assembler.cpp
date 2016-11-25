@@ -21,21 +21,25 @@ Assembler::~Assembler()
 {
 }
 
+void Assembler::logError(string message, uint lineNumber, string line)
+{
+    std::cout <<
+        "Compilation error on line " << lineNumber << ": " << message << std::endl <<
+        "  " << line << std::endl <<
+        std::endl;
+}
+
+#define LOG_ERROR(message) logError(message, (currentLineNumber + 1), currentLine)
+
 void Assembler::compile()
 {
     std::cout << "Started compilation" << std::endl;
     this->bytecode.clear();
 
-    for (int i = 0; i < fileLines.size(); i++)
+    for (int currentLineNumber = 0; currentLineNumber < fileLines.size(); currentLineNumber++)
     {
-        string currentLine = fileLines[i];
+        string currentLine = fileLines[currentLineNumber];
         std::vector<string> tokens = tokensFromLine(currentLine);
-
-        std::cout << "Line: <" << currentLine << ">" << std::endl;
-        std::cout << "Tokens: " << std::endl;
-
-        for (int k = 0; k < tokens.size(); k++)
-            std::cout << "  <" << tokens[k] << ">" << std::endl;
 
         if (tokens.size() > 0)
         {
@@ -52,16 +56,18 @@ void Assembler::compile()
 
             if (definition != NULL)
             {
-                std::cout << "Byte: " << (int)definition->byte << std::endl;
                 bytecode.push_back(definition->byte);
+
+                if ((tokens.size() - 1) < definition->argumentCount)
+                    LOG_ERROR("Too few arguments");
+                else if ((tokens.size() - 1) > definition->argumentCount)
+                    LOG_ERROR("Too many arguments");
             }
             else
             {
-                std::cout << "Token <" << tokens[0] << "> doesn't exist" << std::endl;
+                LOG_ERROR("Token <" + tokens[0] + "> doesn't exist");
             }
         }
-
-        std::cout << std::endl << std::endl;
     }
 }
 
