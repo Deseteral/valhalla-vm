@@ -87,6 +87,13 @@ int main()
     Assembler assembler("fs/test.vasm");
     assembler.compile();
 
+    std::vector<u8>* bytecode = assembler.getBytecode();
+    for (uint i = 0; i < bytecode->size(); i++)
+    {
+        std::cout << (int)bytecode->at(i) << " ";
+    }
+    std::cout << std::endl;
+
     // TODO: Move this to a VM class that describes the state of app
     Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 

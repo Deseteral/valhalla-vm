@@ -10,6 +10,7 @@ public:
     ~Assembler();
 
     void compile();
+    std::vector<u8>* getBytecode();
 
 private:
     std::vector<string> fileLines;

@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "instruction_definitions.h"
+#include "register_definitions.h"
 
 Assembler::Assembler(string filePath)
 {
@@ -24,7 +25,7 @@ Assembler::~Assembler()
 void Assembler::logError(string message, uint lineNumber, string line)
 {
     std::cout <<
-        "Compilation error on line " << lineNumber << ": " << message << std::endl <<
+        "Error on line " << lineNumber << ": " << message << std::endl <<
         "  " << line << std::endl <<
         std::endl;
 }
@@ -40,6 +41,12 @@ void Assembler::compile()
     {
         string currentLine = fileLines[currentLineNumber];
         std::vector<string> tokens = tokensFromLine(currentLine);
+
+        std::cout << "TOKENS: ";
+        for (int h = 0; h < tokens.size(); h++)
+            std::cout << "<" << tokens[h] << "> ";
+
+        std::cout << std::endl;
 
         if (tokens.size() > 0)
         {
@@ -62,6 +69,36 @@ void Assembler::compile()
                     LOG_ERROR("Too few arguments");
                 else if ((tokens.size() - 1) > definition->argumentCount)
                     LOG_ERROR("Too many arguments");
+                else
+                {
+                    for (uint i = 0; i < definition->argumentCount; i++)
+                    {
+                        string currentToken = tokens[i + 1];
+
+                        // Check if token is a register
+                        if (isTokenRegister(currentToken))
+                        {
+                            bytecode.push_back(INSTRUCTION_VALUE_REGISTER);
+                            bytecode.push_back(findRegisterByte(currentToken));
+                        }
+
+                        // Check if token is an address
+                        else if (currentToken.length() >= 2 && currentToken[0] == '@')
+                        {
+                            bytecode.push_back(INSTRUCTION_VALUE_ADDRESS);
+
+                            string valueString = currentToken.substr(1);
+                            bytecode.push_back((u8)std::stoi(valueString));
+                        }
+                        
+                        // Check if token is a literal
+                        else
+                        {
+                            bytecode.push_back(INSTRUCTION_VALUE_LITERAL);
+                            bytecode.push_back((u8)std::stoi(currentToken));
+                        }
+                    }
+                }
             }
             else
             {
@@ -82,8 +119,11 @@ std::vector<string> Assembler::tokensFromLine(string line)
 
         if (currentChar == ' ')
         {
-            tokens.push_back(tmp);
-            tmp = "";
+            if (tmp != "")
+            {
+                tokens.push_back(tmp);
+                tmp = "";
+            }
         }
         else if (currentChar == ';')
             break;
@@ -95,4 +135,9 @@ std::vector<string> Assembler::tokensFromLine(string line)
         tokens.push_back(tmp);
 
     return tokens;
+}
+
+std::vector<u8>* Assembler::getBytecode()
+{
+    return &bytecode;
 }

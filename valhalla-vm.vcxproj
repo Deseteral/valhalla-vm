@@ -129,6 +129,7 @@
     <ClInclude Include="src\valhalla\Assembler.h" />
     <ClInclude Include="src\valhalla\Display.h" />
     <ClInclude Include="src\valhalla\instruction_definitions.h" />
+    <ClInclude Include="src\valhalla\register_definitions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -32,5 +32,8 @@
     <ClInclude Include="src\valhalla\instruction_definitions.h">
       <Filter>src\valhalla</Filter>
     </ClInclude>
+    <ClInclude Include="src\valhalla\register_definitions.h">
+      <Filter>src\valhalla</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
