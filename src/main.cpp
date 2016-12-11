@@ -85,7 +85,7 @@ void renderDisplayToTexture(Display* display, sf::RenderTexture* render, sf::Spr
 int main()
 {
     // Loading test program
-    Assembler assembler("fs/test.vasm");
+    Assembler assembler("fs/addition.vasm");
     assembler.compile();
 
     std::vector<u8>* bytecode = assembler.getBytecode();

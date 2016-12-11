@@ -32,3 +32,14 @@ static InstructionDefinition* findInstructionDefinitionByToken(string token)
 
     return NULL;
 }
+
+static InstructionDefinition* findInstructionDefinitionByByte(u8 byte)
+{
+    for (int i = 0; i < INSTRUCTION_COUNT; i++)
+    {
+        if (byte == instructionDefinitions[i].byte)
+            return &instructionDefinitions[i];
+    }
+
+    return NULL;
+}

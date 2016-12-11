@@ -6,6 +6,7 @@
 
 #include "instruction_definitions.h"
 #include "register_definitions.h"
+#include "../math.h"
 
 Assembler::Assembler(string filePath)
 {
@@ -87,7 +88,13 @@ void Assembler::compile()
                             bytecode.push_back(INSTRUCTION_VALUE_ADDRESS);
 
                             string valueString = currentToken.substr(1);
-                            bytecode.push_back((u8)std::stoi(valueString));
+                            u16 value = (u16)std::stoi(valueString);
+                            u8* splitValues = new u8[2];
+
+                            shortToBytes(value, splitValues);
+
+                            bytecode.push_back(splitValues[0]);
+                            bytecode.push_back(splitValues[1]);
                         }
 
                         // Check if token is a literal

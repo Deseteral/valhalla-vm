@@ -1,0 +1,3 @@
+SET X 10
+SET Y 12
+ADD X Y

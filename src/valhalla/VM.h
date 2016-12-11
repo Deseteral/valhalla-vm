@@ -17,5 +17,6 @@ public:
 private:
     u16 memorySize;
     u8* memory;
+    u8* registers;
     u8 pc;
 };
