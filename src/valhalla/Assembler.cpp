@@ -19,8 +19,7 @@ Assembler::Assembler(string filePath)
 }
 
 Assembler::~Assembler()
-{
-}
+{ }
 
 void Assembler::logError(string message, uint lineNumber, string line)
 {
@@ -90,7 +89,7 @@ void Assembler::compile()
                             string valueString = currentToken.substr(1);
                             bytecode.push_back((u8)std::stoi(valueString));
                         }
-                        
+
                         // Check if token is a literal
                         else
                         {
@@ -106,6 +105,9 @@ void Assembler::compile()
             }
         }
     }
+
+    // end bytecode with stopping hcf
+    bytecode.push_back(findInstructionDefinitionByToken("hcf")->byte);
 }
 
 std::vector<string> Assembler::tokensFromLine(string line)

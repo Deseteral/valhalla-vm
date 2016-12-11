@@ -3,6 +3,7 @@
 
 #include "valhalla/Display.h"
 #include "valhalla/Assembler.h"
+#include "valhalla/VM.h"
 
 // TODO: Make this configurable
 #define DISPLAY_WIDTH  320
@@ -94,6 +95,9 @@ int main()
     }
     std::cout << std::endl;
 
+    VM virtualMachine(16 * 1024);
+    virtualMachine.loadIntoMemory(bytecode);
+
     // TODO: Move this to a VM class that describes the state of app
     Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
@@ -130,6 +134,9 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+
+        if (!virtualMachine.halt)
+            virtualMachine.tick();
 
         renderDisplayToTexture(&display, &displayTexture, &fontSprite);
         window.draw(displaySprite);

@@ -15,11 +15,11 @@ struct InstructionDefinition
 
 #define INSTRUCTION_COUNT 4
 static InstructionDefinition instructionDefinitions[] = {
-    //                     token| byte| argumentCount|
-    InstructionDefinition{ "nop",  0x0,             0 },
-    InstructionDefinition{ "hcf",  0x1,             0 },
-    InstructionDefinition{ "set",  0x2,             2 },
-    InstructionDefinition{ "add",  0x3,             2 }
+    //                     token|  byte| argumentCount|
+    InstructionDefinition{ "nop",  0x00,             0 },
+    InstructionDefinition{ "hcf",  0x01,             0 },
+    InstructionDefinition{ "set",  0x02,             2 },
+    InstructionDefinition{ "add",  0x03,             2 }
 };
 
 static InstructionDefinition* findInstructionDefinitionByToken(string token)
