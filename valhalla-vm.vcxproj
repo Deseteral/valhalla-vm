@@ -123,13 +123,16 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\valhalla\Assembler.cpp" />
     <ClCompile Include="src\valhalla\Display.cpp" />
+    <ClCompile Include="src\valhalla\VM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\data_types.h" />
+    <ClInclude Include="src\math.h" />
     <ClInclude Include="src\valhalla\Assembler.h" />
     <ClInclude Include="src\valhalla\Display.h" />
     <ClInclude Include="src\valhalla\instruction_definitions.h" />
     <ClInclude Include="src\valhalla\register_definitions.h" />
+    <ClInclude Include="src\valhalla\VM.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

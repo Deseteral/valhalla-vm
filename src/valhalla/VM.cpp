@@ -11,7 +11,7 @@
 #define LOAD_VALUE_A_B \
     u8 valueAType = memory[pc++]; \
     u8 valueA, valueB; \
-    u8* saveAddress; \
+    u8* saveAddress = NULL; \
     \
     if (valueAType == INSTRUCTION_VALUE_REGISTER) \
     { \

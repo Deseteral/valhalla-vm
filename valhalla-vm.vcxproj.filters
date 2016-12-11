@@ -18,6 +18,9 @@
     <ClCompile Include="src\valhalla\Assembler.cpp">
       <Filter>src\valhalla</Filter>
     </ClCompile>
+    <ClCompile Include="src\valhalla\VM.cpp">
+      <Filter>src\valhalla</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\valhalla\Display.h">
@@ -33,6 +36,12 @@
       <Filter>src\valhalla</Filter>
     </ClInclude>
     <ClInclude Include="src\valhalla\register_definitions.h">
+      <Filter>src\valhalla</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\valhalla\VM.h">
       <Filter>src\valhalla</Filter>
     </ClInclude>
   </ItemGroup>
