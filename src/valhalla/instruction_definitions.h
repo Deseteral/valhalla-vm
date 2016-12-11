@@ -19,7 +19,10 @@ static InstructionDefinition instructionDefinitions[] = {
     InstructionDefinition{ "nop",  0x00,             0 },
     InstructionDefinition{ "hcf",  0x01,             0 },
     InstructionDefinition{ "set",  0x02,             2 },
-    InstructionDefinition{ "add",  0x03,             2 }
+    InstructionDefinition{ "add",  0x03,             2 },
+    InstructionDefinition{ "sub",  0x04,             2 },
+    InstructionDefinition{ "mul",  0x05,             2 },
+    InstructionDefinition{ "div",  0x06,             2 },
 };
 
 static InstructionDefinition* findInstructionDefinitionByToken(string token)
