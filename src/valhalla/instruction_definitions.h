@@ -23,6 +23,7 @@ static InstructionDefinition instructionDefinitions[] = {
     InstructionDefinition{ "sub",  0x04,             2 },
     InstructionDefinition{ "mul",  0x05,             2 },
     InstructionDefinition{ "div",  0x06,             2 },
+    InstructionDefinition{ "mod",  0x07,             2 },
 };
 
 static InstructionDefinition* findInstructionDefinitionByToken(string token)

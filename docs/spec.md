@@ -12,3 +12,4 @@ Value | Opcode | Description
 0x04 | `SUB a b` | Sets `a` to result of `a-b`.
 0x05 | `MUL a b` | Sets `a` to result of `a*b`.
 0x06 | `DIV a b` | Sets `a` to result of `a/b`.
+0x07 | `MOD a b` | Sets `a` to result of `a%b`.

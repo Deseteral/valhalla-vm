@@ -104,6 +104,11 @@ void VM::tick()
         LOAD_VALUE_A_B
             std::memset(saveAddress, (u8)(valueA / valueB), 1);
     }
+    else IF_TOKEN("mod")
+    {
+        LOAD_VALUE_A_B
+            std::memset(saveAddress, (u8)(valueA % valueB), 1);
+    }
 }
 
 void VM::loadIntoMemory(std::vector<u8>* payload)
