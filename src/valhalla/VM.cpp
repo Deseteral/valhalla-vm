@@ -52,14 +52,18 @@
     }
 
 
-VM::VM(u16 memSize) : halt(false), memorySize(memSize), pc(0)
+VM::VM(VMConfig config) : halt(false), pc(0)
 {
-    memory = new u8[memSize];
+    memorySize = config.memorySize;
+    memory = new u8[memorySize];
     registers = new u8[REGISTER_COUNT]();
+    display = new Display(config.displayWidth, config.displayHeight);
 }
 
 VM::~VM()
-{ }
+{
+    delete display;
+}
 
 void VM::tick()
 {

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-#include "valhalla/Display.h"
 #include "valhalla/Assembler.h"
 #include "valhalla/VM.h"
 
@@ -95,11 +94,13 @@ int main()
     }
     std::cout << std::endl;
 
-    VM virtualMachine(16 * 1024);
-    virtualMachine.loadIntoMemory(bytecode);
+    VMConfig vmConfig = {
+        16 * 1024,                    // memory size
+        DISPLAY_WIDTH, DISPLAY_HEIGHT // display resolution
+    };
 
-    // TODO: Move this to a VM class that describes the state of app
-    Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+    VM vm(vmConfig);
+    vm.loadIntoMemory(bytecode);
 
     // Setting up render window
     sf::RenderWindow window(
@@ -135,10 +136,10 @@ int main()
                 window.close();
         }
 
-        if (!virtualMachine.halt)
-            virtualMachine.tick();
+        if (!vm.halt)
+            vm.tick();
 
-        renderDisplayToTexture(&display, &displayTexture, &fontSprite);
+        renderDisplayToTexture(vm.display, &displayTexture, &fontSprite);
         window.draw(displaySprite);
 
         window.display();

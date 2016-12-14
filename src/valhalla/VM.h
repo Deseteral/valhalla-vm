@@ -1,15 +1,25 @@
 #pragma once
 
-#include "../data_types.h"
 #include <vector>
+#include "../data_types.h"
+#include "Display.h"
+
+struct VMConfig
+{
+    u16 memorySize;
+
+    uint displayWidth;
+    uint displayHeight;
+};
 
 class VM
 {
 public:
-    VM(u16 memSize);
+    VM(VMConfig config);
     ~VM();
 
     bool halt;
+    Display* display;
 
     void tick();
     void loadIntoMemory(std::vector<u8>* payload);
