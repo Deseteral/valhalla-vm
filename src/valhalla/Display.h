@@ -9,8 +9,12 @@ enum DisplayMode {
 class Display
 {
 public:
-    Display(uint width, uint height);
+    Display(uint w, uint h);
     ~Display();
+
+    uint width;
+    uint height;
+    uint bufferSize;
 
     DisplayMode mode;
     u8* buffer;

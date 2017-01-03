@@ -5,7 +5,7 @@
 `im` = immediate value
 
 Value | Opcode      | Description
-------|-------------|----------------------------------------------------------------------
+------|-------------|-----------------------------------------------------------------------
 0x00  | `NOP`       | Do nothing.
 0x01  | `HCF`       | Halt and catch fire. Stops execution of instructions.
 0x02  | `MOV rd rs` | Sets `rd` to the value of `rs`.
@@ -23,3 +23,4 @@ Value | Opcode      | Description
 0x0E  | `NOT rd`    | Negates `rd`.
 0x0F  | `SHL rd rs` | Left shifts bits stored in `rd` by `rs` positions.
 0x10  | `SHR rd rs` | Right shifts bits stored in `rd` by `rs` positions.
+0x11  | `PRI rd`    | Reads the value stored in `rd` as integer and prints it on the screen.

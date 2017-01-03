@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <sstream>
 
 #include "instruction_definitions.h"
 #include "register_definitions.h"
@@ -141,6 +142,27 @@ void VM::tick()
         READ_VALUE_B_REGISTER;
 
         std::memset(saveAddress, (u8)(valueA >> valueB), 1);
+    }
+    else IF_TOKEN("pri")
+    {
+        READ_VALUE_A;
+
+        // get display position from XY registers
+        uint xpos = registers[findRegisterByte("X")];
+        uint ypos = registers[findRegisterByte("Y")];
+        uint bufferIndex = ((xpos + ypos * display->width) % display->bufferSize);
+
+        // convert value to string
+        std::ostringstream ss;
+        ss << (uint)valueA;
+        string str = ss.str();
+
+        // put characters into display buffer
+        for (int i = 0; i < str.length(); i++)
+        {
+            display->buffer[bufferIndex] = str[i];
+            bufferIndex = ((bufferIndex + 1) % display->bufferSize);
+        }
     }
 }
 

@@ -1,9 +1,10 @@
 #include "Display.h"
 
-Display::Display(uint width, uint height)
+Display::Display(uint w, uint h) : width(w), height(h)
 {
     this->mode = TEXT;
-    this->buffer = new u8[width * height]();
+    this->bufferSize = w * h;
+    this->buffer = new u8[bufferSize]();
 }
 
 Display::~Display()

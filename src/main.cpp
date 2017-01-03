@@ -96,7 +96,7 @@ int main()
     std::cout << std::endl;
 
     VMConfig vmConfig = {
-        255,                    // memory size
+        255,                          // memory size
         DISPLAY_WIDTH, DISPLAY_HEIGHT // display resolution
     };
 

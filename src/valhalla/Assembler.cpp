@@ -70,25 +70,32 @@ void Assembler::compile()
                     LOG_ERROR("Too many arguments");
                 else
                 {
-                    string firstToken = tokens[1];
-                    string secondToken = tokens[2];
-
                     // ignore INSTRUCTION_VALUE_NA
 
-                    if (definition->a == INSTRUCTION_VALUE_REGISTER)
-                        bytecode.push_back(findRegisterByte(firstToken));
-                    else if (definition->a == INSTRUCTION_VALUE_IMMEDIATE)
+                    if (definition->valueCount >= 1)
                     {
-                        u8 value = (u8)std::stoi(firstToken);
-                        bytecode.push_back(value);
+                        string firstToken = tokens[1];
+
+                        if (definition->a == INSTRUCTION_VALUE_REGISTER)
+                            bytecode.push_back(findRegisterByte(firstToken));
+                        else if (definition->a == INSTRUCTION_VALUE_IMMEDIATE)
+                        {
+                            u8 value = (u8)std::stoi(firstToken);
+                            bytecode.push_back(value);
+                        }
                     }
 
-                    if (definition->b == INSTRUCTION_VALUE_REGISTER)
-                        bytecode.push_back(findRegisterByte(secondToken));
-                    else if (definition->b == INSTRUCTION_VALUE_IMMEDIATE)
+                    if (definition->valueCount >= 2)
                     {
-                        u8 value = (u8)std::stoi(secondToken);
-                        bytecode.push_back(value);
+                        string secondToken = tokens[2];
+
+                        if (definition->b == INSTRUCTION_VALUE_REGISTER)
+                            bytecode.push_back(findRegisterByte(secondToken));
+                        else if (definition->b == INSTRUCTION_VALUE_IMMEDIATE)
+                        {
+                            u8 value = (u8)std::stoi(secondToken);
+                            bytecode.push_back(value);
+                        }
                     }
                 }
             }
