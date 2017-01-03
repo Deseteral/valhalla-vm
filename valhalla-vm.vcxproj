@@ -127,7 +127,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\data_types.h" />
-    <ClInclude Include="src\math.h" />
     <ClInclude Include="src\valhalla\Assembler.h" />
     <ClInclude Include="src\valhalla\Display.h" />
     <ClInclude Include="src\valhalla\instruction_definitions.h" />

@@ -1,9 +1,0 @@
-; This should compile to:
-
-SET @10 13   ; 2 3 10 0  2 13
-SET X 10     ; 2 1  1 2 10
-SET Y 13     ; 2 1  2 2 13
-ADD X Y      ; 3 1  1 1  2
-NOP          ; 0
-NOP          ; 0
-HCF          ; 1

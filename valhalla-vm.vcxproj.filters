@@ -38,9 +38,6 @@
     <ClInclude Include="src\valhalla\register_definitions.h">
       <Filter>src\valhalla</Filter>
     </ClInclude>
-    <ClInclude Include="src\math.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\valhalla\VM.h">
       <Filter>src\valhalla</Filter>
     </ClInclude>

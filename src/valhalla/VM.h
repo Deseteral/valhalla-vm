@@ -6,7 +6,7 @@
 
 struct VMConfig
 {
-    u16 memorySize;
+    u8 memorySize;
 
     uint displayWidth;
     uint displayHeight;
@@ -25,7 +25,7 @@ public:
     void loadIntoMemory(std::vector<u8>* payload);
 
 private:
-    u16 memorySize;
+    u8 memorySize;
     u8* memory;
     u8* registers;
     u8 pc;

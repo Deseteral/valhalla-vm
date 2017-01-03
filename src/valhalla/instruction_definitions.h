@@ -2,28 +2,46 @@
 
 #include "../data_types.h"
 
-#define INSTRUCTION_VALUE_REGISTER 0x1
-#define INSTRUCTION_VALUE_LITERAL  0x2
-#define INSTRUCTION_VALUE_ADDRESS  0x3
+#define INSTRUCTION_VALUE_COUNT     2
+
+#define INSTRUCTION_VALUE_NA        0x0
+#define INSTRUCTION_VALUE_REGISTER  0x1
+#define INSTRUCTION_VALUE_IMMEDIATE 0x2
+
+#define NA  INSTRUCTION_VALUE_NA
+#define REG INSTRUCTION_VALUE_REGISTER
+#define IMM INSTRUCTION_VALUE_IMMEDIATE
 
 struct InstructionDefinition
 {
     string token;
     u8 byte;
-    uint argumentCount;
+    uint valueCount;
+
+    uint a;
+    uint b;
 };
 
-#define INSTRUCTION_COUNT 4
+#define INSTRUCTION_COUNT 17
 static InstructionDefinition instructionDefinitions[] = {
-    //                     token|  byte| argumentCount|
-    InstructionDefinition{ "nop",  0x00,             0 },
-    InstructionDefinition{ "hcf",  0x01,             0 },
-    InstructionDefinition{ "set",  0x02,             2 },
-    InstructionDefinition{ "add",  0x03,             2 },
-    InstructionDefinition{ "sub",  0x04,             2 },
-    InstructionDefinition{ "mul",  0x05,             2 },
-    InstructionDefinition{ "div",  0x06,             2 },
-    InstructionDefinition{ "mod",  0x07,             2 },
+    //                     token|  byte| valueCount|   a|    b|
+    InstructionDefinition{ "nop",  0x00,          0,  NA,  NA },
+    InstructionDefinition{ "hcf",  0x01,          0,  NA,  NA },
+    InstructionDefinition{ "mov",  0x02,          2, REG, REG },
+    InstructionDefinition{ "set",  0x03,          2, REG, IMM },
+    InstructionDefinition{ "get",  0x04,          2, REG, REG },
+    InstructionDefinition{ "str",  0x05,          2, REG, REG },
+    InstructionDefinition{ "add",  0x06,          2, REG, REG },
+    InstructionDefinition{ "sub",  0x07,          2, REG, REG },
+    InstructionDefinition{ "mul",  0x08,          2, REG, REG },
+    InstructionDefinition{ "div",  0x09,          2, REG, REG },
+    InstructionDefinition{ "mod",  0x0A,          2, REG, REG },
+    InstructionDefinition{  "or",  0x0B,          2, REG, REG },
+    InstructionDefinition{ "and",  0x0C,          2, REG, REG },
+    InstructionDefinition{ "xor",  0x0D,          2, REG, REG },
+    InstructionDefinition{ "not",  0x0E,          1, REG,  NA },
+    InstructionDefinition{ "shl",  0x0F,          2, REG, REG },
+    InstructionDefinition{ "shr",  0x10,          2, REG, REG },
 };
 
 static InstructionDefinition* findInstructionDefinitionByToken(string token)

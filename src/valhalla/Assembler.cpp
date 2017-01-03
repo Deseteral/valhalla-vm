@@ -6,7 +6,6 @@
 
 #include "instruction_definitions.h"
 #include "register_definitions.h"
-#include "../math.h"
 
 Assembler::Assembler(string filePath)
 {
@@ -65,44 +64,31 @@ void Assembler::compile()
             {
                 bytecode.push_back(definition->byte);
 
-                if ((tokens.size() - 1) < definition->argumentCount)
+                if ((tokens.size() - 1) < definition->valueCount)
                     LOG_ERROR("Too few arguments");
-                else if ((tokens.size() - 1) > definition->argumentCount)
+                else if ((tokens.size() - 1) > definition->valueCount)
                     LOG_ERROR("Too many arguments");
                 else
                 {
-                    for (uint i = 0; i < definition->argumentCount; i++)
+                    string firstToken = tokens[1];
+                    string secondToken = tokens[2];
+
+                    // ignore INSTRUCTION_VALUE_NA
+
+                    if (definition->a == INSTRUCTION_VALUE_REGISTER)
+                        bytecode.push_back(findRegisterByte(firstToken));
+                    else if (definition->a == INSTRUCTION_VALUE_IMMEDIATE)
                     {
-                        string currentToken = tokens[i + 1];
+                        u8 value = (u8)std::stoi(firstToken);
+                        bytecode.push_back(value);
+                    }
 
-                        // Check if token is a register
-                        if (isTokenRegister(currentToken))
-                        {
-                            bytecode.push_back(INSTRUCTION_VALUE_REGISTER);
-                            bytecode.push_back(findRegisterByte(currentToken));
-                        }
-
-                        // Check if token is an address
-                        else if (currentToken.length() >= 2 && currentToken[0] == '@')
-                        {
-                            bytecode.push_back(INSTRUCTION_VALUE_ADDRESS);
-
-                            string valueString = currentToken.substr(1);
-                            u16 value = (u16)std::stoi(valueString);
-                            u8* splitValues = new u8[2];
-
-                            shortToBytes(value, splitValues);
-
-                            bytecode.push_back(splitValues[0]);
-                            bytecode.push_back(splitValues[1]);
-                        }
-
-                        // Check if token is a literal
-                        else
-                        {
-                            bytecode.push_back(INSTRUCTION_VALUE_LITERAL);
-                            bytecode.push_back((u8)std::stoi(currentToken));
-                        }
+                    if (definition->b == INSTRUCTION_VALUE_REGISTER)
+                        bytecode.push_back(findRegisterByte(secondToken));
+                    else if (definition->b == INSTRUCTION_VALUE_IMMEDIATE)
+                    {
+                        u8 value = (u8)std::stoi(secondToken);
+                        bytecode.push_back(value);
                     }
                 }
             }

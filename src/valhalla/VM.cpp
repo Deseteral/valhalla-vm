@@ -5,52 +5,21 @@
 
 #include "instruction_definitions.h"
 #include "register_definitions.h"
-#include "../math.h"
 
 #define IF_TOKEN(TOKEN) if (currentInstruction->token == TOKEN)
-#define LOAD_VALUE_A_B \
-    u8 valueAType = memory[pc++]; \
-    u8 valueA, valueB; \
-    u8* saveAddress = NULL; \
-    \
-    if (valueAType == INSTRUCTION_VALUE_REGISTER) \
-    { \
-        u8 registerByte = memory[pc++]; \
-        \
-        saveAddress = &registers[registerByte]; \
-        valueA = registers[registerByte]; \
-    } \
-    else if (valueAType == INSTRUCTION_VALUE_ADDRESS) \
-    { \
-        u8 addrByte1 = memory[pc++]; \
-        u8 addrByte2 = memory[pc++]; \
-        \
-        u16 memoryAddress = bytesToShort(addrByte1, addrByte2); \
-        \
-        saveAddress = &memory[memoryAddress]; \
-        valueA = memory[memoryAddress]; \
-    } \
-    \
-    u8 valueBType = memory[pc++]; \
-    \
-    if (valueBType == INSTRUCTION_VALUE_REGISTER) \
-    { \
-        u8 registerByte = memory[pc++]; \
-        \
-        valueB = registers[registerByte]; \
-    } \
-    else if (valueBType == INSTRUCTION_VALUE_LITERAL) \
-        valueB = memory[pc++]; \
-    else if (valueBType == INSTRUCTION_VALUE_ADDRESS) \
-    { \
-        u8 addrByte1 = memory[pc++]; \
-        u8 addrByte2 = memory[pc++]; \
-        \
-        u16 memoryAddress = bytesToShort(addrByte1, addrByte2); \
-        \
-        valueB = memory[memoryAddress]; \
-    }
 
+#define READ_VALUE_A \
+    u8 registerByteA = memory[pc++]; \
+    \
+    u8* saveAddress = &registers[registerByteA]; \
+    u8 valueA = registers[registerByteA];
+
+#define READ_VALUE_B_REGISTER \
+    u8 registerByteB = memory[pc++]; \
+    u8 valueB = registers[registerByteB];
+
+#define READ_VALUE_B_IMMEDIATE \
+    u8 valueB = memory[pc++];
 
 VM::VM(VMConfig config) : halt(false), pc(0)
 {
@@ -83,42 +52,102 @@ void VM::tick()
     {
         halt = true;
     }
+    else IF_TOKEN("mov")
+    {
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+
+        std::memset(saveAddress, valueB, 1);
+    }
     else IF_TOKEN("set")
     {
-        LOAD_VALUE_A_B
+        READ_VALUE_A;
+        READ_VALUE_B_IMMEDIATE;
+
         std::memset(saveAddress, valueB, 1);
     }
     else IF_TOKEN("add")
     {
-        LOAD_VALUE_A_B
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+
         std::memset(saveAddress, (u8)(valueA + valueB), 1);
     }
     else IF_TOKEN("sub")
     {
-        LOAD_VALUE_A_B
-            std::memset(saveAddress, (u8)(valueA - valueB), 1);
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+        
+        std::memset(saveAddress, (u8)(valueA - valueB), 1);
     }
     else IF_TOKEN("mul")
     {
-        LOAD_VALUE_A_B
-            std::memset(saveAddress, (u8)(valueA * valueB), 1);
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+
+        std::memset(saveAddress, (u8)(valueA * valueB), 1);
     }
     else IF_TOKEN("div")
     {
-        LOAD_VALUE_A_B
-            std::memset(saveAddress, (u8)(valueA / valueB), 1);
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+
+        std::memset(saveAddress, (u8)(valueA / valueB), 1);
     }
     else IF_TOKEN("mod")
     {
-        LOAD_VALUE_A_B
-            std::memset(saveAddress, (u8)(valueA % valueB), 1);
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+        
+        std::memset(saveAddress, (u8)(valueA % valueB), 1);
+    }
+    else IF_TOKEN("or")
+    {
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+
+        std::memset(saveAddress, (u8)(valueA | valueB), 1);
+    }
+    else IF_TOKEN("and")
+    {
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+
+        std::memset(saveAddress, (u8)(valueA & valueB), 1);
+    }
+    else IF_TOKEN("xor")
+    {
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+
+        std::memset(saveAddress, (u8)(valueA ^ valueB), 1);
+    }
+    else IF_TOKEN("not")
+    {
+        READ_VALUE_A;
+
+        std::memset(saveAddress, (u8)(~valueA), 1);
+    }
+    else IF_TOKEN("shl")
+    {
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+
+        std::memset(saveAddress, (u8)(valueA << valueB), 1);
+    }
+    else IF_TOKEN("shr")
+    {
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+
+        std::memset(saveAddress, (u8)(valueA >> valueB), 1);
     }
 }
 
 void VM::loadIntoMemory(std::vector<u8>* payload)
 {
     std::cout << "Loading " << payload->size() << " bytes of bytecode into " <<
-        memorySize << " byte memory" << std::endl;
+        (uint)memorySize << " byte memory" << std::endl;
 
     if (payload->size() > memorySize)
     {
