@@ -167,6 +167,28 @@ void VM::tick()
             bufferIndex = ((bufferIndex + 1) % display->bufferSize);
         }
     }
+    else IF_TOKEN("prs")
+    {
+        READ_VALUE_A_IMMEDIATE;
+
+        // get display position from XY registers
+        uint xpos = registers[findRegisterByte("X")];
+        uint ypos = registers[findRegisterByte("Y")];
+        uint bufferIndex = ((xpos + ypos * (display->width / 8)) % display->bufferSize);
+
+        u8 returnAddress = pc;
+        pc = valueA;
+
+        char c = memory[pc++];
+        while (c != 0)
+        {
+            display->buffer[bufferIndex] = c;
+            bufferIndex = ((bufferIndex + 1) % display->bufferSize);
+            c = memory[pc++];
+        }
+
+        pc = returnAddress;
+    }
     else IF_TOKEN("jmp")
     {
         READ_VALUE_A_IMMEDIATE;
@@ -187,4 +209,7 @@ void VM::loadIntoMemory(std::vector<u8>* payload)
 
     for (uint i = 0; i < payload->size(); i++)
         memory[i] = payload->at(i);
+
+    // set pc to main entry point
+    pc = memory[0];
 }

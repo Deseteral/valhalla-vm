@@ -42,10 +42,11 @@ static InstructionDefinition instructionDefinitions[] = {
     InstructionDefinition{ "shl",  0x0F,          2, REG, REG },
     InstructionDefinition{ "shr",  0x10,          2, REG, REG },
     InstructionDefinition{ "pri",  0x11,          1, REG,  NA },
+    InstructionDefinition{ "prs",  0x12,          1, IMM,  NA },
     InstructionDefinition{ "jmp",  0x13,          1, IMM,  NA },
     // update INSTRUCTION_COUNT!
 };
-#define INSTRUCTION_COUNT 19
+#define INSTRUCTION_COUNT 20
 
 static InstructionDefinition* findInstructionDefinitionByToken(string token)
 {

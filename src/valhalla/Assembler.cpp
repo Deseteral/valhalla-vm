@@ -35,7 +35,10 @@ void Assembler::logError(string message, uint lineNumber, string line)
 void Assembler::compile()
 {
     std::cout << "Started compilation" << std::endl;
-    this->bytecode.clear();
+    bytecode.clear();
+
+    // starting byte (main entry point)
+    bytecode.push_back(0);
 
     std::map<string, u8> labels;
     std::map<uint, string> missingLabels;
@@ -73,6 +76,28 @@ void Assembler::compile()
                 continue;
             }
 
+            // it it is a data label
+            if (tokenLowerCase[0] == '.')
+            {
+                string labelName = tokenLowerCase.substr(1);
+
+                if (labels.find(labelName) != labels.end())
+                    LOG_ERROR("Data label: '" + labelName + "' is already defined!");
+
+                if (tokens.size() < 2)
+                    LOG_ERROR("There is no data on label: " + labelName);
+
+                labels[labelName] = bytecode.size();
+
+                string data = tokens[1];
+
+                for (int i = 0; i < data.length(); i++)
+                    bytecode.push_back(data[i]);
+                bytecode.push_back(0);
+
+                continue;
+            }
+
             InstructionDefinition* definition =
                 findInstructionDefinitionByToken(tokenLowerCase);
 
@@ -96,8 +121,8 @@ void Assembler::compile()
                             bytecode.push_back(findRegisterByte(firstToken));
                         else if (definition->a == INSTRUCTION_VALUE_IMMEDIATE)
                         {
-                            // if there is label token (jump instruction)
-                            if (firstToken[0] == ':')
+                            // if there is label token (jump instruction or PRS)
+                            if (firstToken[0] == ':' || firstToken[0] == '.')
                             {
                                 string labelName = firstToken.substr(1);
 
@@ -147,6 +172,9 @@ void Assembler::compile()
         bytecode[address] = labels[labelName];
     }
 
+    if (labels.find("start") != labels.end())
+        bytecode[0] = labels["start"];
+
     // end bytecode with stopping hcf
     bytecode.push_back(findInstructionDefinitionByToken("hcf")->byte);
 }
@@ -170,6 +198,11 @@ std::vector<string> Assembler::tokensFromLine(string line)
         }
         else if (currentChar == ';')
             break;
+        else if (tmp == "" && currentChar == '"')
+        {
+            tokens.push_back(line.substr(i + 1, line.length() - i - 2));
+            break;
+        }
         else
             tmp += currentChar;
     }

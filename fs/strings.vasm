@@ -1,0 +1,4 @@
+.simple_text "This is very simple text - Hello world! @#%^*"
+
+:start
+PRS .simple_text
