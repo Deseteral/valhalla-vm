@@ -166,6 +166,9 @@ void VM::tick()
             display->buffer[bufferIndex] = str[i];
             bufferIndex = ((bufferIndex + 1) % display->bufferSize);
         }
+
+        registers[findRegisterByte("X")] = bufferIndex % (display->width / 8);
+        registers[findRegisterByte("Y")] = bufferIndex / (display->width / 8);
     }
     else IF_TOKEN("prs")
     {
@@ -186,6 +189,9 @@ void VM::tick()
             bufferIndex = ((bufferIndex + 1) % display->bufferSize);
             c = memory[pc++];
         }
+
+        registers[findRegisterByte("X")] = bufferIndex % (display->width / 8);
+        registers[findRegisterByte("Y")] = bufferIndex / (display->width / 8);
 
         pc = returnAddress;
     }

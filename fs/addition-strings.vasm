@@ -1,0 +1,16 @@
+.begin "If you add "
+.to " to "
+.get " you will get "
+
+:start
+PRS .begin
+SET A 10
+PRI A
+
+PRS .to
+SET B 12
+PRI B
+
+PRS .get
+ADD A B
+PRI A
