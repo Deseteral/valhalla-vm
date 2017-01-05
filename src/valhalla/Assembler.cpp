@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <map>
 
 #include "instruction_definitions.h"
 #include "register_definitions.h"
@@ -36,6 +37,9 @@ void Assembler::compile()
     std::cout << "Started compilation" << std::endl;
     this->bytecode.clear();
 
+    std::map<string, u8> labels;
+    std::map<uint, string> missingLabels;
+
     for (int currentLineNumber = 0; currentLineNumber < fileLines.size(); currentLineNumber++)
     {
         string currentLine = fileLines[currentLineNumber];
@@ -56,6 +60,18 @@ void Assembler::compile()
                 tokenLowerCase.begin(),
                 ::tolower
             );
+
+            // if it is a label
+            if (tokenLowerCase[0] == ':')
+            {
+                string labelName = tokenLowerCase.substr(1);
+
+                if (labels.find(labelName) != labels.end())
+                    LOG_ERROR("Label: '" + labelName + "' is already defined!");
+
+                labels[labelName] = bytecode.size();
+                continue;
+            }
 
             InstructionDefinition* definition =
                 findInstructionDefinitionByToken(tokenLowerCase);
@@ -80,8 +96,19 @@ void Assembler::compile()
                             bytecode.push_back(findRegisterByte(firstToken));
                         else if (definition->a == INSTRUCTION_VALUE_IMMEDIATE)
                         {
-                            u8 value = (u8)std::stoi(firstToken);
-                            bytecode.push_back(value);
+                            // if there is label token (jump instruction)
+                            if (firstToken[0] == ':')
+                            {
+                                string labelName = firstToken.substr(1);
+
+                                missingLabels[bytecode.size()] = labelName;
+                                bytecode.push_back(0);
+                            }
+                            else
+                            {
+                                u8 value = (u8)std::stoi(firstToken);
+                                bytecode.push_back(value);
+                            }
                         }
                     }
 
@@ -104,6 +131,20 @@ void Assembler::compile()
                 LOG_ERROR("Token <" + tokens[0] + "> doesn't exist");
             }
         }
+    }
+
+    for (
+        std::map<uint, string>::iterator it = missingLabels.begin();
+        it != missingLabels.end();
+        it++)
+    {
+        uint address = it->first;
+        string labelName = it->second;
+
+        if (labels.find(labelName) == labels.end())
+            std::cout << "Label: '" + labelName + "' is not defined!" << std::endl;
+
+        bytecode[address] = labels[labelName];
     }
 
     // end bytecode with stopping hcf

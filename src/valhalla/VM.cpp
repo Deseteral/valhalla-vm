@@ -15,6 +15,9 @@
     u8* saveAddress = &registers[registerByteA]; \
     u8 valueA = registers[registerByteA];
 
+#define READ_VALUE_A_IMMEDIATE \
+    u8 valueA = memory[pc++];
+
 #define READ_VALUE_B_REGISTER \
     u8 registerByteB = memory[pc++]; \
     u8 valueB = registers[registerByteB];
@@ -150,7 +153,7 @@ void VM::tick()
         // get display position from XY registers
         uint xpos = registers[findRegisterByte("X")];
         uint ypos = registers[findRegisterByte("Y")];
-        uint bufferIndex = ((xpos + ypos * display->width) % display->bufferSize);
+        uint bufferIndex = ((xpos + ypos * (display->width / 8)) % display->bufferSize);
 
         // convert value to string
         std::ostringstream ss;
@@ -163,6 +166,11 @@ void VM::tick()
             display->buffer[bufferIndex] = str[i];
             bufferIndex = ((bufferIndex + 1) % display->bufferSize);
         }
+    }
+    else IF_TOKEN("jmp")
+    {
+        READ_VALUE_A_IMMEDIATE;
+        this->pc = valueA;
     }
 }
 

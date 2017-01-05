@@ -24,3 +24,5 @@ Value | Opcode      | Description
 0x0F  | `SHL rd rs` | Left shifts bits stored in `rd` by `rs` positions.
 0x10  | `SHR rd rs` | Right shifts bits stored in `rd` by `rs` positions.
 0x11  | `PRI rd`    | Reads the value stored in `rd` as integer and prints it on the screen.
+0x12  | `PRS rd`    | TODO
+0x13  | `JMP im`    | Jumps to address `im`.

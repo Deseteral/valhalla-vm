@@ -22,7 +22,6 @@ struct InstructionDefinition
     uint b;
 };
 
-#define INSTRUCTION_COUNT 18
 static InstructionDefinition instructionDefinitions[] = {
     //                     token|  byte| valueCount|   a|    b|
     InstructionDefinition{ "nop",  0x00,          0,  NA,  NA },
@@ -43,7 +42,10 @@ static InstructionDefinition instructionDefinitions[] = {
     InstructionDefinition{ "shl",  0x0F,          2, REG, REG },
     InstructionDefinition{ "shr",  0x10,          2, REG, REG },
     InstructionDefinition{ "pri",  0x11,          1, REG,  NA },
+    InstructionDefinition{ "jmp",  0x13,          1, IMM,  NA },
+    // update INSTRUCTION_COUNT!
 };
+#define INSTRUCTION_COUNT 19
 
 static InstructionDefinition* findInstructionDefinitionByToken(string token)
 {

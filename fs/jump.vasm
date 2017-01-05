@@ -1,0 +1,8 @@
+SET A 1
+SET B 1
+
+:pp
+PRI A
+ADD A B
+ADD Y B
+JMP :pp
