@@ -84,7 +84,7 @@ void renderDisplayToTexture(Display* display, sf::RenderTexture* render, sf::Spr
 int main()
 {
     // Loading test program
-    Assembler assembler("fs/fibonacci.vasm");
+    Assembler assembler("fs/fibonacci-lim.vasm");
     assembler.compile();
 
     std::vector<u8>* bytecode = assembler.getBytecode();

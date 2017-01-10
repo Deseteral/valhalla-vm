@@ -43,10 +43,17 @@ static InstructionDefinition instructionDefinitions[] = {
     InstructionDefinition{ "shr",  0x10,          2, REG, REG },
     InstructionDefinition{ "pri",  0x11,          1, REG,  NA },
     InstructionDefinition{ "prs",  0x12,          1, IMM,  NA },
-    InstructionDefinition{ "jmp",  0x13,          1, IMM,  NA },
+    InstructionDefinition{ "cmp",  0x13,          2, REG, REG },
+    InstructionDefinition{ "jmp",  0x14,          1, IMM,  NA },
+    InstructionDefinition{ "jeq",  0x15,          1, IMM,  NA },
+    InstructionDefinition{ "jlt",  0x16,          1, IMM,  NA },
+    InstructionDefinition{ "jgt",  0x17,          1, IMM,  NA },
+    InstructionDefinition{ "jle",  0x18,          1, IMM,  NA },
+    InstructionDefinition{ "jge",  0x19,          1, IMM,  NA },
+    InstructionDefinition{ "jne",  0x1A,          1, IMM,  NA },
     // update INSTRUCTION_COUNT!
 };
-#define INSTRUCTION_COUNT 20
+#define INSTRUCTION_COUNT 27
 
 static InstructionDefinition* findInstructionDefinitionByToken(string token)
 {

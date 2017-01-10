@@ -29,4 +29,5 @@ private:
     u8* memory;
     u8* registers;
     u8 pc;
+    u8 cmp;
 };

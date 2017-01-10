@@ -25,6 +25,10 @@
 #define READ_VALUE_B_IMMEDIATE \
     u8 valueB = memory[pc++];
 
+#define VALUE_CMP_EQ 0
+#define VALUE_CMP_LT 1
+#define VALUE_CMP_GT 2
+
 VM::VM(VMConfig config) : halt(false), pc(0)
 {
     memorySize = config.memorySize;
@@ -195,10 +199,64 @@ void VM::tick()
 
         pc = returnAddress;
     }
+    else IF_TOKEN("cmp")
+    {
+        READ_VALUE_A;
+        READ_VALUE_B_REGISTER;
+
+        if (valueA == valueB)
+            cmp = VALUE_CMP_EQ;
+        else if (valueA < valueB)
+            cmp = VALUE_CMP_LT;
+        else if (valueA > valueB)
+            cmp = VALUE_CMP_GT;
+    }
     else IF_TOKEN("jmp")
     {
         READ_VALUE_A_IMMEDIATE;
         this->pc = valueA;
+    }
+    else IF_TOKEN("jeq")
+    {
+        READ_VALUE_A_IMMEDIATE;
+
+        if (cmp == VALUE_CMP_EQ)
+            this->pc = valueA;
+    }
+    else IF_TOKEN("jlt")
+    {
+        READ_VALUE_A_IMMEDIATE;
+
+        if (cmp == VALUE_CMP_LT)
+            this->pc = valueA;
+    }
+    else IF_TOKEN("jgt")
+    {
+        READ_VALUE_A_IMMEDIATE;
+
+        if (cmp == VALUE_CMP_GT)
+            this->pc = valueA;
+    }
+    else IF_TOKEN("jle")
+    {
+        READ_VALUE_A_IMMEDIATE;
+
+        if (cmp == VALUE_CMP_LT || cmp == VALUE_CMP_EQ)
+            this->pc = valueA;
+    }
+    else IF_TOKEN("jge")
+    {
+        READ_VALUE_A_IMMEDIATE;
+
+        if (cmp == VALUE_CMP_GT || cmp == VALUE_CMP_EQ)
+            this->pc = valueA;
+    }
+    else IF_TOKEN("jne")
+    {
+        READ_VALUE_A_IMMEDIATE;
+
+        if (cmp != VALUE_CMP_EQ)
+            this->pc = valueA;
     }
 }
 
