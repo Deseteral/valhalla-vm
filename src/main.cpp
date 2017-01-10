@@ -1,5 +1,9 @@
+#include "imgui/imgui.h"
+#include "imgui/imgui-sfml.h"
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include "valhalla/Assembler.h"
 #include "valhalla/VM.h"
@@ -109,6 +113,8 @@ int main()
         "Valhalla VM"
     );
 
+    ImGui::SFML::Init(window);
+
     // Rendering Display to SFML layer
     sf::RenderTexture displayTexture;
     displayTexture.create(DISPLAY_WIDTH, DISPLAY_HEIGHT);
@@ -128,14 +134,21 @@ int main()
     sf::Sprite fontSprite(fontTexture);
 
     // Main loop
+    sf::Clock deltaClock;
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
+            ImGui::SFML::ProcessEvent(event);
+
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+
+        ImGui::SFML::Update(deltaClock.restart());
+
+        ImGui::Text("Hello, world!");
 
         if (!vm.halt)
             vm.tick();
@@ -143,8 +156,10 @@ int main()
         renderDisplayToTexture(vm.display, &displayTexture, &fontSprite);
         window.draw(displaySprite);
 
+        ImGui::Render();
         window.display();
     }
 
+    ImGui::SFML::Shutdown();
     return 0;
 }
