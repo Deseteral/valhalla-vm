@@ -77,5 +77,8 @@
     <ClInclude Include="src\imgui\stb_truetype.h">
       <Filter>src\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="src\renderer.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

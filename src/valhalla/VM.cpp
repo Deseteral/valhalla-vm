@@ -29,7 +29,7 @@
 #define VALUE_CMP_LT 1
 #define VALUE_CMP_GT 2
 
-VM::VM(VMConfig config) : halt(false), pc(0)
+VM::VM(VMConfig config) : halt(true), pc(0)
 {
     memorySize = config.memorySize;
     memory = new u8[memorySize];
@@ -276,4 +276,5 @@ void VM::loadIntoMemory(std::vector<u8>* payload)
 
     // set pc to main entry point
     pc = memory[0];
+    halt = false;
 }

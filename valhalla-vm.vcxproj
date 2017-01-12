@@ -138,6 +138,7 @@
     <ClInclude Include="src\imgui\stb_rect_pack.h" />
     <ClInclude Include="src\imgui\stb_textedit.h" />
     <ClInclude Include="src\imgui\stb_truetype.h" />
+    <ClInclude Include="src\renderer.h" />
     <ClInclude Include="src\valhalla\Assembler.h" />
     <ClInclude Include="src\valhalla\Display.h" />
     <ClInclude Include="src\valhalla\instruction_definitions.h" />
