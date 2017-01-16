@@ -12,6 +12,11 @@ struct VMConfig
     uint displayHeight;
 };
 
+struct VMInputState
+{
+    bool keyState[11] = { false };
+};
+
 class VM
 {
 public:
@@ -23,11 +28,12 @@ public:
     u8* registers;
     u8* memory;
 
-    void tick();
+    void tick(char input);
     void loadIntoMemory(std::vector<u8>* payload);
 
 private:
     u8 memorySize;
     u8 pc;
     u8 cmp;
+    string stdInput;
 };

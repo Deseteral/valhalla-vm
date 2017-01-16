@@ -29,7 +29,7 @@
 #define VALUE_CMP_LT 1
 #define VALUE_CMP_GT 2
 
-VM::VM(VMConfig config) : halt(true), pc(0)
+VM::VM(VMConfig config) : halt(true), pc(0), stdInput("")
 {
     memorySize = config.memorySize;
     memory = new u8[memorySize]();
@@ -42,15 +42,46 @@ VM::~VM()
     delete display;
 }
 
-void VM::tick()
+void VM::tick(char input)
 {
-    std::cout << "registers: ";
-    for (int i = 0; i < REGISTER_COUNT; i++)
-        std::cout << (uint)registers[i] << " ";
-    std::cout << std::endl;
+    // push stdin onto screen
+    if (input != ' ')
+    {
+        uint sxpos = registers[findRegisterByte("X")];
+        uint sypos = registers[findRegisterByte("Y")];
+        uint sbufferIndex = ((sxpos + sypos * (display->width / 8)) % display->bufferSize);
 
+        if (input != '\n')
+        {
+            display->buffer[sbufferIndex] = input;
+            sbufferIndex = ((sbufferIndex + 1) % display->bufferSize);
+        }
+        else
+        {
+            sxpos = 0;
+            sypos = ((sypos + 1) % (display->height / 8));
+            sbufferIndex = ((sxpos + sypos * (display->width / 8)) % display->bufferSize);
+        }
+
+        registers[findRegisterByte("X")] = sbufferIndex % (display->width / 8);
+        registers[findRegisterByte("Y")] = sbufferIndex / (display->width / 8);
+    }
+
+    // instrucion processing
     u8 currentByte = memory[pc++];
     InstructionDefinition* currentInstruction = findInstructionDefinitionByByte(currentByte);
+
+    IF_TOKEN("red")
+    {
+        if (input != '\n')
+        {
+            if (input != ' ')
+                stdInput += input;
+
+            pc--;
+            return;
+        }
+    }
 
     IF_TOKEN("nop")
     {
@@ -257,6 +288,18 @@ void VM::tick()
 
         if (cmp != VALUE_CMP_EQ)
             this->pc = valueA;
+    }
+    else IF_TOKEN("red")
+    {
+        READ_VALUE_A;
+
+        uint inputValue;
+        std::istringstream iss(stdInput);
+        iss >> inputValue;
+
+        stdInput = "";
+
+        std::memset(saveAddress, (u8)(inputValue), 1);
     }
 }
 

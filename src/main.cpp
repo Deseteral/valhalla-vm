@@ -16,6 +16,7 @@ int main()
     };
 
     VM vm(vmConfig);
+    VMInputState inputState;
 
     // Setting up render window
     sf::RenderWindow window(
@@ -60,6 +61,42 @@ int main()
                 window.close();
         }
 
+        // stdin
+        char input = ' ';
+        VMInputState newState;
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
+            newState.keyState[0] = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
+            newState.keyState[1] = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+            newState.keyState[2] = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+            newState.keyState[3] = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
+            newState.keyState[4] = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
+            newState.keyState[5] = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
+            newState.keyState[6] = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num7))
+            newState.keyState[7] = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num8))
+            newState.keyState[8] = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9))
+            newState.keyState[9] = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+            newState.keyState[10] = true;
+
+        for (int i = 0; i < 11; i++)
+        {
+            if (!inputState.keyState[i] && newState.keyState[i])
+                input = i == 10 ? '\n' : ((int)'0' + i);
+        }
+
+        inputState = newState;
+
+        // GUI Rendering
         ImGui::SFML::Update(deltaClock.restart());
 
         ImGui::Begin("Simulation control");
@@ -118,7 +155,7 @@ int main()
         ImGui::End();
 
         if (!vm.halt)
-            vm.tick();
+            vm.tick(input);
 
         renderDisplayToTexture(vm.display, &displayTexture, &fontSprite);
         window.draw(displaySprite);

@@ -34,3 +34,5 @@ Value | Opcode      | Description
 0x18  | `JLE ad`    | Jumps to address `ad` when last comparison was less or equal.
 0x19  | `JGE ad`    | Jumps to address `ad` when last comparison was greater or equal.
 0x1A  | `JNE ad`    | Jumps to address `ad` when last comparison was not equal.
+0x1B  | `RED rd`    | Blocks; Reads integer from `stdin` to `rd`.
+0x1C  | `RND rd`    | Draws random number from 0 to 255 and saves it in `rd`.

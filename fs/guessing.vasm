@@ -1,0 +1,19 @@
+RND J
+
+:read
+RED K
+
+CMP K J
+
+JEQ :eql
+JGT :grt
+JLT :les
+
+:eql
+HCF
+
+:grt
+JMP :read
+
+:les
+JMP :read
