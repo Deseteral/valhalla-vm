@@ -32,7 +32,7 @@
 VM::VM(VMConfig config) : halt(true), pc(0)
 {
     memorySize = config.memorySize;
-    memory = new u8[memorySize];
+    memory = new u8[memorySize]();
     registers = new u8[REGISTER_COUNT]();
     display = new Display(config.displayWidth, config.displayHeight);
 }
@@ -276,5 +276,4 @@ void VM::loadIntoMemory(std::vector<u8>* payload)
 
     // set pc to main entry point
     pc = memory[0];
-    halt = false;
 }

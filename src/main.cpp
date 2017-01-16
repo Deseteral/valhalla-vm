@@ -2,6 +2,7 @@
 #include "imgui/imgui-sfml.h"
 
 #include <iostream>
+#include <sstream>
 #include <SFML/System/Clock.hpp>
 
 #include "renderer.h"
@@ -44,6 +45,7 @@ int main()
 
     // ImGui resource allocation
     char* assemblerPathBuffer = new char[256]();
+    string sourceCode = "";
 
     // Main loop
     sf::Clock deltaClock;
@@ -60,15 +62,60 @@ int main()
 
         ImGui::SFML::Update(deltaClock.restart());
 
+        ImGui::Begin("Simulation control");
         ImGui::InputText("vasm file path", assemblerPathBuffer, 256);
 
-        if (ImGui::Button("Assemble")) {
+        if (ImGui::Button("Assemble"))
+        {
             Assembler assembler(assemblerPathBuffer);
+            sourceCode = assembler.getSourceCode();
+
             assembler.compile();
 
             std::vector<u8>* bytecode = assembler.getBytecode();
             vm.loadIntoMemory(bytecode);
         }
+
+        if (ImGui::Button("Halt"))
+            vm.halt = !vm.halt;
+        ImGui::End();
+
+        ImGui::Begin("VM internals");
+        ImGui::Text("X: %d", vm.registers[0]);
+        ImGui::Text("Y: %d", vm.registers[1]);
+        ImGui::Text("C: %d", vm.registers[2]);
+        ImGui::Text("W: %d", vm.registers[3]);
+        ImGui::Text("A: %d", vm.registers[4]);
+        ImGui::Text("B: %d", vm.registers[5]);
+        ImGui::Text("J: %d", vm.registers[6]);
+        ImGui::Text("K: %d", vm.registers[7]);
+        ImGui::Text("L: %d", vm.registers[8]);
+        ImGui::Text("");
+
+        // Memory dump
+        for (uint my = 0; my < 16; my++)
+        {
+            string mbuf = "";
+            for (uint mx = 0; mx < 16; mx++)
+            {
+                uint memoryValue = (uint)vm.memory[my * 16 + mx];
+
+                std::stringstream stream;
+                stream << std::hex << memoryValue;
+
+                string hexValue(stream.str());
+
+                mbuf += hexValue;
+                for (int fill = (3 - hexValue.size()); fill != 0; fill--)
+                    mbuf += " ";
+            }
+            ImGui::Text(mbuf.c_str());
+        }
+        ImGui::End();
+
+        ImGui::Begin("Source code");
+        ImGui::Text(sourceCode.c_str());
+        ImGui::End();
 
         if (!vm.halt)
             vm.tick();

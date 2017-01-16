@@ -20,14 +20,14 @@ public:
 
     bool halt;
     Display* display;
+    u8* registers;
+    u8* memory;
 
     void tick();
     void loadIntoMemory(std::vector<u8>* payload);
 
 private:
     u8 memorySize;
-    u8* memory;
-    u8* registers;
     u8 pc;
     u8 cmp;
 };

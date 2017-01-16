@@ -11,6 +11,7 @@ public:
 
     void compile();
     std::vector<u8>* getBytecode();
+    string getSourceCode();
 
 private:
     std::vector<string> fileLines;

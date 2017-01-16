@@ -217,3 +217,16 @@ std::vector<u8>* Assembler::getBytecode()
 {
     return &bytecode;
 }
+
+string Assembler::getSourceCode()
+{
+    string code = "";
+
+    for (int i = 0; i < fileLines.size(); i++)
+    {
+        code += fileLines[i];
+        code += '\n';
+    }
+
+    return code;
+}
