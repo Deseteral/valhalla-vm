@@ -1,0 +1,7 @@
+.space " "
+
+:start
+RND K
+PRI K
+PRS .space
+JMP :start

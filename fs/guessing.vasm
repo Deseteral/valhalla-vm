@@ -1,6 +1,15 @@
+.intro "Drawing random number.../"
+.pick "Pick your number/"
+.win "You've won/"
+.less "Your pick is too low/"
+.greater "Your pick is too high/"
+
+:start
+PRS .intro
 RND J
 
 :read
+PRS .pick
 RED K
 
 CMP K J
@@ -10,10 +19,13 @@ JGT :grt
 JLT :les
 
 :eql
+PRS .win
 HCF
 
 :grt
+PRS .greater
 JMP :read
 
 :les
+PRS .less
 JMP :read

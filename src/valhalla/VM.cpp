@@ -3,6 +3,8 @@
 #include <iostream>
 #include <cstring>
 #include <sstream>
+#include <ctime>
+#include <cstdlib>
 
 #include "instruction_definitions.h"
 #include "register_definitions.h"
@@ -35,6 +37,7 @@ VM::VM(VMConfig config) : halt(true), pc(0), stdInput("")
     memory = new u8[memorySize]();
     registers = new u8[REGISTER_COUNT]();
     display = new Display(config.displayWidth, config.displayHeight);
+    srand(time(NULL));
 }
 
 VM::~VM()
@@ -220,8 +223,18 @@ void VM::tick(char input)
         char c = memory[pc++];
         while (c != 0)
         {
-            display->buffer[bufferIndex] = c;
-            bufferIndex = ((bufferIndex + 1) % display->bufferSize);
+            if (c == '/')
+            {
+                xpos = 0;
+                ypos = ((ypos + 1) % (display->height / 8));
+                bufferIndex = ((xpos + ypos * (display->width / 8)) % display->bufferSize);
+            }
+            else
+            {
+                display->buffer[bufferIndex] = c;
+                bufferIndex = ((bufferIndex + 1) % display->bufferSize);
+            }
+
             c = memory[pc++];
         }
 
@@ -300,6 +313,13 @@ void VM::tick(char input)
         stdInput = "";
 
         std::memset(saveAddress, (u8)(inputValue), 1);
+    }
+    else IF_TOKEN("rnd")
+    {
+        READ_VALUE_A;
+
+        uint randomNumber = rand() % 256;
+        std::memset(saveAddress, (u8)randomNumber, 1);
     }
 }
 
