@@ -1,4 +1,17 @@
-SET A 10
-SET B 12
+.begin "If you add "
+.to " to "
+.get " you will get "
+
+:start
+RED A
+RED B
+
+PRS .begin
+PRI A
+
+PRS .to
+PRI B
+
+PRS .get
 ADD A B
 PRI A

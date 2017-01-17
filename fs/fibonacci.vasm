@@ -1,9 +1,9 @@
 .space " "
 
 :start
-SET J 1 ; f1
-SET K 1 ; f2
-SET L 0 ; f3
+SET J 1   ; f1
+SET K 1   ; f2
+SET L 0   ; f3
 
 :loop
 SET A 0 ; tmp
@@ -14,6 +14,13 @@ MOV L A
 MOV J K
 MOV K L
 
+
+CMP L J
+JLT :end
+
 PRI L
 PRS .space
 JMP :loop
+
+:end
+HCF
