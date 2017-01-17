@@ -1,16 +1,21 @@
 .intro "Drawing random number.../"
 .pick "Pick your number/"
-.win "You've won/"
+.win "You've won!/"
+.triesone "It took you "
+.triestwo " tries to guess the number/"
 .less "Your pick is too low/"
 .greater "Your pick is too high/"
 
 :start
+SET A 1
+SET B 0
 PRS .intro
 RND J
 
 :read
 PRS .pick
 RED K
+ADD B A
 
 CMP K J
 
@@ -20,6 +25,9 @@ JLT :les
 
 :eql
 PRS .win
+PRS .triesone
+PRI B
+PRS .triestwo
 HCF
 
 :grt
