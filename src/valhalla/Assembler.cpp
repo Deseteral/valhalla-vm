@@ -43,13 +43,13 @@ void Assembler::compile()
     std::map<string, u8> labels;
     std::map<uint, string> missingLabels;
 
-    for (int currentLineNumber = 0; currentLineNumber < fileLines.size(); currentLineNumber++)
+    for (uint currentLineNumber = 0; currentLineNumber < fileLines.size(); currentLineNumber++)
     {
         string currentLine = fileLines[currentLineNumber];
         std::vector<string> tokens = tokensFromLine(currentLine);
 
         std::cout << "TOKENS: ";
-        for (int h = 0; h < tokens.size(); h++)
+        for (uint h = 0; h < tokens.size(); h++)
             std::cout << "<" << tokens[h] << "> ";
 
         std::cout << std::endl;
@@ -72,7 +72,7 @@ void Assembler::compile()
                 if (labels.find(labelName) != labels.end())
                     LOG_ERROR("Label: '" + labelName + "' is already defined!");
 
-                labels[labelName] = bytecode.size();
+                labels[labelName] = (u8)bytecode.size();
                 continue;
             }
 
@@ -87,11 +87,11 @@ void Assembler::compile()
                 if (tokens.size() < 2)
                     LOG_ERROR("There is no data on label: " + labelName);
 
-                labels[labelName] = bytecode.size();
+                labels[labelName] = (u8)bytecode.size();
 
                 string data = tokens[1];
 
-                for (int i = 0; i < data.length(); i++)
+                for (uint i = 0; i < data.length(); i++)
                     bytecode.push_back(data[i]);
                 bytecode.push_back(0);
 
@@ -184,7 +184,7 @@ std::vector<string> Assembler::tokensFromLine(string line)
     std::vector<string> tokens;
     string tmp = "";
 
-    for (int i = 0; i < line.length(); i++)
+    for (uint i = 0; i < line.length(); i++)
     {
         char currentChar = line[i];
 
@@ -222,7 +222,7 @@ string Assembler::getSourceCode()
 {
     string code = "";
 
-    for (int i = 0; i < fileLines.size(); i++)
+    for (uint i = 0; i < fileLines.size(); i++)
     {
         code += fileLines[i];
         code += '\n';

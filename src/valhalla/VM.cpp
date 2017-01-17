@@ -199,7 +199,7 @@ void VM::tick(char input)
         string str = ss.str();
 
         // put characters into display buffer
-        for (int i = 0; i < str.length(); i++)
+        for (uint i = 0; i < str.length(); i++)
         {
             display->buffer[bufferIndex] = str[i];
             bufferIndex = ((bufferIndex + 1) % display->bufferSize);
