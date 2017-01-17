@@ -20,7 +20,7 @@ int main()
 
     // Setting up render window
     sf::RenderWindow window(
-        sf::VideoMode(DISPLAY_WIDTH * SCALE, DISPLAY_HEIGHT * SCALE),
+        sf::VideoMode(DISPLAY_WIDTH * SCALE + 360, DISPLAY_HEIGHT * SCALE),
         "Valhalla VM"
     );
 
@@ -52,6 +52,8 @@ int main()
     sf::Clock deltaClock;
     while (window.isOpen())
     {
+        window.clear();
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -99,65 +101,73 @@ int main()
         // GUI Rendering
         ImGui::SFML::Update(deltaClock.restart());
 
-        ImGui::Begin("Simulation control");
-        ImGui::InputText("vasm file path", assemblerPathBuffer, 256);
-
-        if (ImGui::Button("Assemble"))
+        ImGui::Begin("Valhalla VM");
+        if (ImGui::CollapsingHeader("Simulation control"))
         {
-            Assembler assembler(assemblerPathBuffer);
-            sourceCode = assembler.getSourceCode();
+            ImGui::InputText("vasm file path", assemblerPathBuffer, 256);
 
-            assembler.compile();
-
-            std::vector<u8>* bytecode = assembler.getBytecode();
-            vm->loadIntoMemory(bytecode);
-        }
-
-        if (ImGui::Button("Halt"))
-            vm->halt = !vm->halt;
-
-        if (ImGui::Button("Reset VM"))
-        {
-            delete vm;
-            vm = new VM(vmConfig);
-        }
-        ImGui::End();
-
-        ImGui::Begin("VM internals");
-        ImGui::Text("X: %d", vm->registers[0]);
-        ImGui::Text("Y: %d", vm->registers[1]);
-        ImGui::Text("C: %d", vm->registers[2]);
-        ImGui::Text("W: %d", vm->registers[3]);
-        ImGui::Text("A: %d", vm->registers[4]);
-        ImGui::Text("B: %d", vm->registers[5]);
-        ImGui::Text("J: %d", vm->registers[6]);
-        ImGui::Text("K: %d", vm->registers[7]);
-        ImGui::Text("L: %d", vm->registers[8]);
-        ImGui::Text("");
-
-        // Memory dump
-        for (uint my = 0; my < 16; my++)
-        {
-            string mbuf = "";
-            for (uint mx = 0; mx < 16; mx++)
+            if (ImGui::Button("Assemble"))
             {
-                uint memoryValue = (uint)vm->memory[my * 16 + mx];
+                Assembler assembler(assemblerPathBuffer);
+                sourceCode = assembler.getSourceCode();
 
-                std::stringstream stream;
-                stream << std::hex << memoryValue;
+                assembler.compile();
 
-                string hexValue(stream.str());
-
-                mbuf += hexValue;
-                for (int fill = (3 - hexValue.size()); fill != 0; fill--)
-                    mbuf += " ";
+                std::vector<u8>* bytecode = assembler.getBytecode();
+                vm->loadIntoMemory(bytecode);
             }
-            ImGui::Text(mbuf.c_str());
-        }
-        ImGui::End();
 
-        ImGui::Begin("Source code");
-        ImGui::Text(sourceCode.c_str());
+            ImGui::SameLine();
+            if (ImGui::Button("Halt"))
+                vm->halt = !vm->halt;
+
+            ImGui::SameLine();
+            if (ImGui::Button("Reset VM"))
+            {
+                delete vm;
+                vm = new VM(vmConfig);
+            }
+        }
+
+        if (ImGui::CollapsingHeader("VM internals"))
+        {
+            ImGui::Text("X: %d", vm->registers[0]); ImGui::SameLine();
+            ImGui::Text("Y: %d", vm->registers[1]); ImGui::SameLine();
+            ImGui::Text("C: %d", vm->registers[2]); ImGui::SameLine();
+            ImGui::Text("W: %d", vm->registers[3]); ImGui::SameLine();
+            ImGui::Text("A: %d", vm->registers[4]); ImGui::SameLine();
+            ImGui::Text("B: %d", vm->registers[5]);
+            ImGui::Text("J: %d", vm->registers[6]); ImGui::SameLine();
+            ImGui::Text("K: %d", vm->registers[7]); ImGui::SameLine();
+            ImGui::Text("L: %d", vm->registers[8]);
+            ImGui::Spacing();
+
+            // Memory dump
+            for (uint my = 0; my < 16; my++)
+            {
+                string mbuf = "";
+                for (uint mx = 0; mx < 16; mx++)
+                {
+                    uint memoryValue = (uint)vm->memory[my * 16 + mx];
+
+                    std::stringstream stream;
+                    stream << std::hex << memoryValue;
+
+                    string hexValue(stream.str());
+
+                    mbuf += hexValue;
+                    for (int fill = (3 - hexValue.size()); fill != 0; fill--)
+                        mbuf += " ";
+                }
+                ImGui::Text(mbuf.c_str());
+            }
+        }
+
+        if (ImGui::CollapsingHeader("Source code"))
+        {
+            ImGui::Text(sourceCode.c_str());
+        }
+
         ImGui::End();
 
         if (!vm->halt)
