@@ -15,7 +15,7 @@ int main()
         DISPLAY_WIDTH, DISPLAY_HEIGHT // display resolution
     };
 
-    VM vm(vmConfig);
+    VM* vm = new VM(vmConfig);
     VMInputState inputState;
 
     // Setting up render window
@@ -110,23 +110,29 @@ int main()
             assembler.compile();
 
             std::vector<u8>* bytecode = assembler.getBytecode();
-            vm.loadIntoMemory(bytecode);
+            vm->loadIntoMemory(bytecode);
         }
 
         if (ImGui::Button("Halt"))
-            vm.halt = !vm.halt;
+            vm->halt = !vm->halt;
+
+        if (ImGui::Button("Reset VM"))
+        {
+            delete vm;
+            vm = new VM(vmConfig);
+        }
         ImGui::End();
 
         ImGui::Begin("VM internals");
-        ImGui::Text("X: %d", vm.registers[0]);
-        ImGui::Text("Y: %d", vm.registers[1]);
-        ImGui::Text("C: %d", vm.registers[2]);
-        ImGui::Text("W: %d", vm.registers[3]);
-        ImGui::Text("A: %d", vm.registers[4]);
-        ImGui::Text("B: %d", vm.registers[5]);
-        ImGui::Text("J: %d", vm.registers[6]);
-        ImGui::Text("K: %d", vm.registers[7]);
-        ImGui::Text("L: %d", vm.registers[8]);
+        ImGui::Text("X: %d", vm->registers[0]);
+        ImGui::Text("Y: %d", vm->registers[1]);
+        ImGui::Text("C: %d", vm->registers[2]);
+        ImGui::Text("W: %d", vm->registers[3]);
+        ImGui::Text("A: %d", vm->registers[4]);
+        ImGui::Text("B: %d", vm->registers[5]);
+        ImGui::Text("J: %d", vm->registers[6]);
+        ImGui::Text("K: %d", vm->registers[7]);
+        ImGui::Text("L: %d", vm->registers[8]);
         ImGui::Text("");
 
         // Memory dump
@@ -135,7 +141,7 @@ int main()
             string mbuf = "";
             for (uint mx = 0; mx < 16; mx++)
             {
-                uint memoryValue = (uint)vm.memory[my * 16 + mx];
+                uint memoryValue = (uint)vm->memory[my * 16 + mx];
 
                 std::stringstream stream;
                 stream << std::hex << memoryValue;
@@ -154,10 +160,10 @@ int main()
         ImGui::Text(sourceCode.c_str());
         ImGui::End();
 
-        if (!vm.halt)
-            vm.tick(input);
+        if (!vm->halt)
+            vm->tick(input);
 
-        renderDisplayToTexture(vm.display, &displayTexture, &fontSprite);
+        renderDisplayToTexture(vm->display, &displayTexture, &fontSprite);
         window.draw(displaySprite);
 
         ImGui::Render();
