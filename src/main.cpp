@@ -61,6 +61,8 @@ int main()
 
             if (event.type == sf::Event::Closed)
                 window.close();
+            else if (event.type == sf::Event::Resized)
+                window.setView(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)));
         }
 
         // stdin
