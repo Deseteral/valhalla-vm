@@ -1,9 +1,10 @@
 # Valhalla VM spec
 
-`rd` = destination register,
-`rs` = source register,
-`im` = immediate value,
-`ad` = memory address (label)
+## Instruction set
+- `rd` = destination register,
+- `rs` = source register,
+- `im` = immediate value,
+- `ad` = memory address (label)
 
 Value | Opcode      | Description
 ------|-------------|-----------------------------------------------------------------------
