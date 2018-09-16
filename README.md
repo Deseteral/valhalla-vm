@@ -1,5 +1,5 @@
 # valhalla-vm
-Simple imaginary VM for C/C++ course.
+Simple imaginary VM made for C/C++ course.
 
 ## Instruction set
 - `rd` = destination register,
